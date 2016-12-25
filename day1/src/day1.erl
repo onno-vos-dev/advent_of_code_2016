@@ -2,9 +2,6 @@
 
 -compile(export_all).
 
-%% -export([run/1
-%%         ]).
-
 -type parsed_direction() :: {atom(), pos_integer()}.
 -type coordinate() :: [{atom(), integer()}].
 
@@ -23,21 +20,6 @@ run(part_2) ->
   {_, CoordinatesAcc} = follow_directions(Directions, north, ?START, []),
   io:format("Total number of coordinates=~p~n", [length(CoordinatesAcc)]),
   locations_visited_multiple_times(CoordinatesAcc).
-
-%% BROKEN!!!!!
-locations_visited_multiple_times([]) ->
-  ok;
-locations_visited_multiple_times([H|T]) ->
-  location_visited_later(H, T),
-  locations_visited_multiple_times(T).
-
-location_visited_later(_H, []) ->
-  ok;
-location_visited_later(H, [H|T]) ->
-  io:format("Coordinates=~p BlocksFromStart=~p~n", [H, final_pos(H)]),
-  location_visited_later(H,T);
-location_visited_later(H, [_|T]) ->
-  location_visited_later(H,T).
 
 %%%_* Parse Directions =========================================================
 -spec get_input() -> [string()].
@@ -140,6 +122,20 @@ pos(Blocks) ->
   Blocks.
 neg(Blocks) ->
   -Blocks.
+
+locations_visited_multiple_times([]) ->
+  ok;
+locations_visited_multiple_times([H|T]) ->
+  location_visited_later(H, T),
+  locations_visited_multiple_times(T).
+
+location_visited_later(_H, []) ->
+  ok;
+location_visited_later(H, [H|T]) ->
+  io:format("Coordinates=~p BlocksFromStart=~p~n", [H, final_pos(H)]),
+  location_visited_later(H,T);
+location_visited_later(H, [_|T]) ->
+  location_visited_later(H,T).
 
 -spec final_pos([coordinate()]) -> pos_integer().
 final_pos(FinalCoordinates) ->
